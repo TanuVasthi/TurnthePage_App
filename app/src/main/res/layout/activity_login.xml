@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/loginpageimage" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="125dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="250dp"
+        android:fontFamily="@font/bebasregular"
+        android:text="LOGIN"
+        android:textAlignment="center"
+        android:textColor="@color/brownish_cream"
+        android:textSize="48sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/imageView3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageView3" />
+
+    <EditText
+        android:id="@+id/editTextTextEmailAddress"
+        android:layout_width="330dp"
+        android:layout_height="74dp"
+        android:drawableLeft="@drawable/emailiconimg"
+        android:drawablePadding="10sp"
+        android:elevation="5dp"
+        android:ems="10"
+        android:fontFamily="@font/poppinsregular"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:shadowColor="@color/brownish_cream"
+        android:textColor="@color/brownish_cream"
+        android:textColorHint="@color/brownish_cream"
+        android:textColorLink="@color/brownish_cream"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintStart_toStartOf="@+id/imageView3"
+        app:layout_constraintTop_toTopOf="@+id/imageView3"
+        app:layout_constraintVertical_bias="0.691" />
+
+    <EditText
+        android:id="@+id/editTextTextPassword"
+        android:layout_width="330dp"
+        android:layout_height="74dp"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/passwordlockimg"
+        android:drawablePadding="10sp"
+        android:ems="10"
+        android:fontFamily="@font/poppinsregular"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:textColor="@color/brownish_cream"
+        android:textColorHint="@color/brownish_cream"
+        android:textColorLink="@color/brownish_cream"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddress"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/loginbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/buttoncolor"
+        android:backgroundTint="@color/muted_brown"
+        android:fontFamily="@font/bebasregular"
+        android:text="LOGIN"
+        android:textColor="@color/brownish_cream"
+        android:textColorLink="@color/muted_brown"
+        android:textSize="24sp"
+        app:cornerRadius="10sp"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTextPassword"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextPassword"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword"
+        app:strokeColor="@color/muted_brown" />
+
+    <TextView
+        android:id="@+id/donthavebutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/poppinsregular"
+        android:text="Don't have an account?"
+        android:textColor="@color/brownish_cream"
+        app:layout_constraintEnd_toEndOf="@+id/loginbutton"
+        app:layout_constraintStart_toStartOf="@+id/loginbutton"
+        app:layout_constraintTop_toBottomOf="@+id/loginbutton" />
+</androidx.constraintlayout.widget.ConstraintLayout>

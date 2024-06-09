@@ -2,4 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="start_screen_color">#341904</color>
+    <color name="start_screen_color2">#201002</color>
+    <color name="orange">#DD743E</color>
+    <color name="cream">#FFF6EF</color>
+    <color name="muted_brown">#402E32</color>
+    <color name="brownish_cream">#E2CEB1</color>
+
 </resources>
