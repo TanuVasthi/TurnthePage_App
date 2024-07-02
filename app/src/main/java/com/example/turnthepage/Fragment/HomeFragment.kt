@@ -1,5 +1,6 @@
 package com.example.turnthepage.Fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.interfaces.ItemClickListener
 import com.denzcoskun.imageslider.models.SlideModel
+import com.example.turnthepage.MenuBottomSheetFragment
 
 import com.example.turnthepage.R
 
@@ -31,8 +33,12 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+
         binding = FragmentHomeBinding.inflate(inflater,container,false)
+        binding.viewAllMenu.setOnClickListener{
+            val bottomSheetDialog = MenuBottomSheetFragment()
+            bottomSheetDialog.show(parentFragmentManager,"Test")
+        }
         return binding.root
 
 
@@ -43,9 +49,10 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val imageList = ArrayList<SlideModel>()
-        imageList.add(SlideModel(R.drawable.start, ScaleTypes.FIT))
-        imageList.add(SlideModel(R.drawable.loginpageimage, ScaleTypes.FIT))
-        imageList.add(SlideModel(R.drawable.locationimagegradient, ScaleTypes.FIT))
+        imageList.add(SlideModel(R.drawable.bookstore6, ScaleTypes.FIT))
+        imageList.add(SlideModel(R.drawable.bookstore2, ScaleTypes.FIT))
+        imageList.add(SlideModel(R.drawable.bookstore3, ScaleTypes.FIT))
+        imageList.add(SlideModel(R.drawable.bookstore5, ScaleTypes.FIT))
         val imageSlider = binding.imageSlider
         imageSlider.setImageList(imageList)
         imageSlider.setImageList(imageList, ScaleTypes.FIT)
@@ -63,7 +70,7 @@ class HomeFragment : Fragment() {
         val item = listOf("The Great Gatsby","To Kill a Mocking Bird","Pride and Prejudice","Moby Dick")
         val Price=listOf("₹300","₹350","₹230","₹250")
         val popularFoodImages=listOf(R.drawable.greatgatsby,R.drawable.tokillamockingbird,R.drawable.prideandprejudice,R.drawable.mobydick)
-        val adapter=PopularAdapter(item,Price,popularFoodImages)
+        val adapter=PopularAdapter(item,Price,popularFoodImages,requireContext())
         binding.popularRecyclerView.layoutManager= LinearLayoutManager(requireContext())
         binding.popularRecyclerView.adapter=adapter
     }
@@ -73,7 +80,7 @@ class HomeFragment : Fragment() {
     }
 }
 
-class PopularAdapter (private val items:List<String>,private val price:List<String>,private val image:List<Int>) : RecyclerView.Adapter<PopularAdapter.PopularViewHolder>(){
+class PopularAdapter (private val items:List<String>,private val price:List<String>,private val image:List<Int>,private val requireContext: Context) : RecyclerView.Adapter<PopularAdapter.PopularViewHolder>(){
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PopularViewHolder {
