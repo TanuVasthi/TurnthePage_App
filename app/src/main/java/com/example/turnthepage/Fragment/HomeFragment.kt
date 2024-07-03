@@ -15,6 +15,7 @@ import com.denzcoskun.imageslider.models.SlideModel
 import com.example.turnthepage.MenuBottomSheetFragment
 
 import com.example.turnthepage.R
+import com.example.turnthepage.adapter.PopularAdapter
 
 
 import com.example.turnthepage.databinding.FragmentHomeBinding
@@ -69,8 +70,8 @@ class HomeFragment : Fragment() {
         })
         val item = listOf("The Great Gatsby","To Kill a Mocking Bird","Pride and Prejudice","Moby Dick")
         val Price=listOf("₹300","₹350","₹230","₹250")
-        val popularFoodImages=listOf(R.drawable.greatgatsby,R.drawable.tokillamockingbird,R.drawable.prideandprejudice,R.drawable.mobydick)
-        val adapter=PopularAdapter(item,Price,popularFoodImages,requireContext())
+        val popularBookImages=listOf(R.drawable.greatgatsby,R.drawable.tokillamockingbird,R.drawable.prideandprejudice,R.drawable.mobydick)
+        val adapter= PopularAdapter(item,Price,popularBookImages,requireContext())
         binding.popularRecyclerView.layoutManager= LinearLayoutManager(requireContext())
         binding.popularRecyclerView.adapter=adapter
     }
@@ -80,33 +81,5 @@ class HomeFragment : Fragment() {
     }
 }
 
-class PopularAdapter (private val items:List<String>,private val price:List<String>,private val image:List<Int>,private val requireContext: Context) : RecyclerView.Adapter<PopularAdapter.PopularViewHolder>(){
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PopularViewHolder {
-        return PopularViewHolder(PopularItemBinding.inflate(LayoutInflater.from(parent.context),parent,false))
-    }
-
-
-    override fun onBindViewHolder(holder: PopularViewHolder, position: Int) {
-        val item = items[position]
-        val images = image[position]
-        val price=price[position]
-        holder.bind(item,price,images)
-    }
-    override fun getItemCount(): Int {
-        return items.size
-    }
-
-    class PopularViewHolder(private val binding: PopularItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        private val imagesView=binding.imageView5
-        fun bind(item:String,price:String,images:Int){
-            binding.BookTitlePopular.text=item
-            binding.pricePopular.text=price
-            imagesView.setImageResource(images)
-
-        }
-
-    }
-
-}
