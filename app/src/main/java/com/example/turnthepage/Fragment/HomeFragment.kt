@@ -1,6 +1,6 @@
 package com.example.turnthepage.Fragment
 
-import android.content.Context
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,23 +8,25 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.interfaces.ItemClickListener
 import com.denzcoskun.imageslider.models.SlideModel
 import com.example.turnthepage.MenuBottomSheetFragment
-
 import com.example.turnthepage.R
-import com.example.turnthepage.adapter.PopularAdapter
-
-
+import com.example.turnthepage.adapter.MenuAdapter
+import com.example.turnthepage.model.menuItem
 import com.example.turnthepage.databinding.FragmentHomeBinding
-import com.example.turnthepage.databinding.PopularItemBinding
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
-
+    private lateinit var database:FirebaseDatabase
+    private lateinit var menuItems: MutableList<menuItem>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -40,11 +42,53 @@ class HomeFragment : Fragment() {
             val bottomSheetDialog = MenuBottomSheetFragment()
             bottomSheetDialog.show(parentFragmentManager,"Test")
         }
+        //retrieve and display popular menu items
+        retrieveAndDisplayPopularItems()
         return binding.root
 
 
 
 
+    }
+
+    private fun retrieveAndDisplayPopularItems() {
+        //get reference to database
+        database=FirebaseDatabase.getInstance()
+        val bookRef:DatabaseReference=database.reference.child("menu")
+        menuItems= mutableListOf()
+
+        bookRef.addListenerForSingleValueEvent(object:ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(bookSnapshot in snapshot.children){
+                    val menuItem=bookSnapshot.getValue(menuItem::class.java)
+                    menuItem?.let{
+                        menuItems.add(it)
+                    }
+                }
+                //display random popular books
+                randomPopularItems()
+            }
+
+            private fun randomPopularItems() {
+                val index=menuItems.indices.toList().shuffled()
+                val numItemToShow=6
+                val subsetMenuItems=index.take(numItemToShow).map { menuItems[it] }
+
+                setPopularItemsAdapter(subsetMenuItems)
+            }
+
+            private fun setPopularItemsAdapter(subsetMenuItems: List<menuItem>) {
+                val adapter= MenuAdapter(subsetMenuItems.toMutableList(),requireContext())
+                binding.popularRecyclerView.layoutManager= LinearLayoutManager(requireContext())
+                binding.popularRecyclerView.adapter=adapter
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -68,12 +112,8 @@ class HomeFragment : Fragment() {
 
             }
         })
-        val item = listOf("The Great Gatsby","To Kill a Mocking Bird","Pride and Prejudice","Moby Dick")
-        val Price=listOf("₹300","₹350","₹230","₹250")
-        val popularBookImages=listOf(R.drawable.greatgatsby,R.drawable.tokillamockingbird,R.drawable.prideandprejudice,R.drawable.mobydick)
-        val adapter= PopularAdapter(item,Price,popularBookImages,requireContext())
-        binding.popularRecyclerView.layoutManager= LinearLayoutManager(requireContext())
-        binding.popularRecyclerView.adapter=adapter
+
+
     }
 
     companion object {
