@@ -297,7 +297,7 @@ class CartAdapter(
     }
 }
 */
-
+/*
 package com.example.turnthepage.adapter
 
 import android.content.Context
@@ -355,6 +355,13 @@ class CartAdapter(
 
     override fun getItemCount(): Int = cartItems.size
 
+    fun getUpdatedItemQuantities():MutableList<Int> {
+        val itemQuantity= mutableListOf<Int>()
+        itemQuantity.addAll(cartQuantity)
+        return itemQuantity
+
+    }
+
     inner class CartViewHolder(private val binding: ActivityCartItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
             binding.apply {
@@ -381,6 +388,7 @@ class CartAdapter(
         private fun decreaseQuantity(position: Int) {
             if (itemQuantities[position] > 1) {
                 itemQuantities[position]--
+                cartQuantity[position]= itemQuantities[position]
                 binding.cartItemQuantity.text = itemQuantities[position].toString()
             }
         }
@@ -388,6 +396,143 @@ class CartAdapter(
         private fun increaseQuantity(position: Int) {
             if (itemQuantities[position] < 10) {
                 itemQuantities[position]++
+                cartQuantity[position]= itemQuantities[position]
+                binding.cartItemQuantity.text = itemQuantities[position].toString()
+            }
+        }
+
+        private fun deleteItem(position: Int) {
+            getUniqueKeyAtPosition(position) { uniqueKey ->
+                uniqueKey?.let { removeItem(position, it) }
+            }
+        }
+
+        private fun removeItem(position: Int, uniqueKey: String) {
+            cartItemsReference.child(uniqueKey).removeValue().addOnSuccessListener {
+                cartItems.removeAt(position)
+                cartItemPrices.removeAt(position)
+                cartImages.removeAt(position)
+                cartDescriptions.removeAt(position)
+                cartQuantity.removeAt(position)
+                itemQuantities = itemQuantities.filterIndexed { index, _ -> index != position }.toIntArray()
+                notifyItemRemoved(position)
+                notifyItemRangeChanged(position, cartItems.size)
+                Toast.makeText(context, "Item Deleted Successfully", Toast.LENGTH_SHORT).show()
+            }.addOnFailureListener {
+                Toast.makeText(context, "Failed to Delete", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        private fun getUniqueKeyAtPosition(position: Int, onComplete: (String?) -> Unit) {
+            cartItemsReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    var uniqueKey: String? = null
+                    snapshot.children.forEachIndexed { index, dataSnapshot ->
+                        if (index == position) {
+                            uniqueKey = dataSnapshot.key
+                            return@forEachIndexed
+                        }
+                    }
+                    onComplete(uniqueKey)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("CartAdapter", "Error getting unique key: ${error.message}")
+                    onComplete(null)
+                }
+            })
+        }
+    }
+}*/
+package com.example.turnthepage.adapter
+
+import android.content.Context
+import android.net.Uri
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.turnthepage.databinding.ActivityCartItemBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+
+class CartAdapter(
+    private val context: Context,
+    private val cartItems: MutableList<String>,
+    private val cartItemPrices: MutableList<Int>, // Change to Int
+    private val cartDescriptions: MutableList<String>,
+    private val cartImages: MutableList<String>,
+    private val cartQuantity: MutableList<Int>
+) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
+
+    private val auth = FirebaseAuth.getInstance()
+    private val cartItemsReference: DatabaseReference
+
+    init {
+        val database = FirebaseDatabase.getInstance()
+        val userId = auth.currentUser?.uid ?: ""
+        cartItemsReference = database.reference.child("user").child(userId).child("CartItems")
+        itemQuantities = IntArray(cartItems.size) { 1 }
+    }
+
+    companion object {
+        private lateinit var itemQuantities: IntArray
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
+        val binding = ActivityCartItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return CartViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
+        if (position in cartItems.indices) {
+            holder.bind(position)
+        } else {
+            Log.e("CartAdapter", "Invalid position: $position")
+        }
+    }
+
+    override fun getItemCount(): Int = cartItems.size
+
+    fun getUpdatedItemQuantities(): MutableList<Int> {
+        val itemQuantity = mutableListOf<Int>()
+        itemQuantity.addAll(cartQuantity)
+        return itemQuantity
+    }
+
+    inner class CartViewHolder(private val binding: ActivityCartItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(position: Int) {
+            binding.apply {
+                val quantity = itemQuantities[position]
+                cartBookName.text = cartItems[position]
+                cartItemPrice.text = cartItemPrices[position].toString()
+                val uri = Uri.parse(cartImages[position])
+                Glide.with(context).load(uri).into(cartImage)
+                cartItemQuantity.text = quantity.toString()
+                minusButton.setOnClickListener { decreaseQuantity(position) }
+                plusButton.setOnClickListener { increaseQuantity(position) }
+                deleteButton.setOnClickListener {
+                    if (adapterPosition != RecyclerView.NO_POSITION) {
+                        deleteItem(adapterPosition)
+                    }
+                }
+            }
+        }
+
+        private fun decreaseQuantity(position: Int) {
+            if (itemQuantities[position] > 1) {
+                itemQuantities[position]--
+                cartQuantity[position] = itemQuantities[position]
+                binding.cartItemQuantity.text = itemQuantities[position].toString()
+            }
+        }
+
+        private fun increaseQuantity(position: Int) {
+            if (itemQuantities[position] < 10) {
+                itemQuantities[position]++
+                cartQuantity[position] = itemQuantities[position]
                 binding.cartItemQuantity.text = itemQuantities[position].toString()
             }
         }

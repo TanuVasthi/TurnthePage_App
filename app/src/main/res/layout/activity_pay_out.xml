@@ -59,14 +59,14 @@
             android:text="Name" />
 
         <EditText
+            android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:ems="10"
             android:inputType="text"
-            android:paddingLeft="8dp"
-            android:text="Name" />
+            android:paddingLeft="8dp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -90,16 +90,16 @@
             android:text="Address" />
 
         <EditText
+            android:id="@+id/address"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
             android:ems="10"
             android:inputType="textMultiLine"
             android:paddingLeft="8dp"
-            android:text="Name" />
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -123,14 +123,14 @@
             android:text="Phone" />
 
         <EditText
+            android:id="@+id/phone"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:ems="10"
             android:inputType="phone"
-            android:paddingLeft="8dp"
-            android:text="1234567890" />
+            android:paddingLeft="8dp" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -184,6 +184,7 @@
             android:text="Total Amount" />
 
         <EditText
+            android:id="@+id/totalAmount"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:layout_weight="1"
@@ -192,8 +193,7 @@
             android:gravity="end"
             android:inputType="text"
             android:paddingLeft="8dp"
-            android:paddingEnd="32dp"
-            android:text="300" />
+            android:paddingEnd="32dp" />
     </LinearLayout>
 </LinearLayout>
 

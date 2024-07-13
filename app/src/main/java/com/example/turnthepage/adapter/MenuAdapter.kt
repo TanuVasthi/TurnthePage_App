@@ -196,7 +196,7 @@ import com.example.turnthepage.databinding.MenuItemBinding
 import com.example.turnthepage.model.menuItem
 
 class MenuAdapter(
-    private val menuItems: MutableList<menuItem>,
+    private val menuItems: List<menuItem>,
     private val requireContext: Context,
     private val itemClickListener: ((Int) -> Unit)? = null
 ) : RecyclerView.Adapter<MenuAdapter.MenuViewHolder>() {

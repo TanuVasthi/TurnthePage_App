@@ -3,56 +3,68 @@ package com.example.turnthepage.Fragment
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.turnthepage.R
 import com.example.turnthepage.adapter.MenuAdapter
 import com.example.turnthepage.databinding.FragmentSearchBinding
+import com.example.turnthepage.model.menuItem
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 
 class SearchFragment : Fragment() {
     private lateinit var binding:FragmentSearchBinding
     private lateinit var adapter: MenuAdapter
-    private val originalMenuBookName :List<String> = listOf("Pride and Prejudice","Moby-Dick","Great Gatsby")
-    private val originalMenuItemPrice :List<String> = listOf("200","320","300")
-    private val originalMenuImage:List<Int> =listOf(R.drawable.prideandprejudice, R.drawable.mobydick, R.drawable.greatgatsby)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
-    private val filteredMenuBookName = mutableListOf<String>()
-    private val filteredMenuItemPrice = mutableListOf<String>()
-    private val filteredMenuImage = mutableListOf<Int>()
+    private lateinit var database: FirebaseDatabase
+    private val originalMenuItems = mutableListOf<menuItem>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSearchBinding.inflate(inflater,container,false)
-        //adapter = MenuAdapter(filteredMenuBookName,filteredMenuItemPrice,filteredMenuImage,requireContext())
-        binding.menuRecyclerView.layoutManager=LinearLayoutManager(requireContext())
-        binding.menuRecyclerView.adapter=adapter
 
         setupSearchView()
-        showAllMenu()
+        retrieveMenuItem()
         return binding.root
     }
 
+    private fun retrieveMenuItem() {
+        database= FirebaseDatabase.getInstance()
+        val bookReference:DatabaseReference = database.reference.child("menu")
+        bookReference.addListenerForSingleValueEvent(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(bookSnapshot in snapshot.children){
+                    val menuItem = bookSnapshot.getValue(menuItem::class.java)
+                    menuItem?.let {
+                        originalMenuItems.add(it)
+                    }
+                }
+                showAllMenu()
+            }
 
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    }
 
     private fun showAllMenu() {
-        filteredMenuBookName.clear()
-        filteredMenuItemPrice.clear()
-        filteredMenuImage.clear()
+        val filteredMenuItem = ArrayList(originalMenuItems)
+        setAdapter(filteredMenuItem)
+    }
 
-        filteredMenuBookName.addAll(originalMenuBookName)
-        filteredMenuItemPrice.addAll(originalMenuItemPrice)
-        filteredMenuImage.addAll(originalMenuImage)
-
-        adapter.notifyDataSetChanged()
+    private fun setAdapter(filteredMenuItem: List<menuItem>) {
+        adapter = MenuAdapter(filteredMenuItem , requireContext())
+        binding.menuRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.menuRecyclerView.adapter = adapter
     }
 
     private fun setupSearchView(){
@@ -72,21 +84,12 @@ class SearchFragment : Fragment() {
     }
 
     private fun filterMenuItems(query: String) {
-        filteredMenuBookName.clear()
-        filteredMenuItemPrice.clear()
-        filteredMenuImage.clear()
-        
-        originalMenuBookName.forEachIndexed { index, bookName ->
-            if(bookName.contains(query,ignoreCase = true)){
-                filteredMenuBookName.add(bookName)
-                filteredMenuItemPrice.add(originalMenuItemPrice[index])
-                filteredMenuImage.add(originalMenuImage[index])
-            }
+        val filteredMenuItems = originalMenuItems.filter {
+            it.bookTitle?.contains(query,ignoreCase = true)==true
         }
-        adapter.notifyDataSetChanged()
+        setAdapter(filteredMenuItems)
     }
-
-    companion object {
+    companion object{
 
     }
 }

@@ -16,11 +16,6 @@
         android:label="fragment_cart"
         tools:layout="@layout/fragment_cart" />
     <fragment
-        android:id="@+id/historyFragment"
-        android:name="com.example.turnthepage.Fragment.HistoryFragment"
-        android:label="fragment_history"
-        tools:layout="@layout/fragment_history" />
-    <fragment
         android:id="@+id/profileFragment"
         android:name="com.example.turnthepage.Fragment.ProfileFragment"
         android:label="fragment_profile"

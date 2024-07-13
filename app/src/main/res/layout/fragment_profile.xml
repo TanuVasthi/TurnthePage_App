@@ -36,13 +36,13 @@
                 android:textStyle="bold" />
 
             <EditText
+                android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:ems="10"
-                android:inputType="text"
-                android:text="Name" />
+                android:inputType="text" />
         </LinearLayout>
 
         <LinearLayout
@@ -69,13 +69,13 @@
                 android:textStyle="bold" />
 
             <EditText
+                android:id="@+id/address"
                 android:layout_width="wrap_content"
                 android:layout_height="65dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:ems="10"
-                android:inputType="textImeMultiLine"
-                android:text="Name" />
+                android:inputType="textImeMultiLine" />
         </LinearLayout>
 
         <LinearLayout
@@ -100,13 +100,13 @@
                 android:textStyle="bold" />
 
             <EditText
+                android:id="@+id/email"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:ems="10"
-                android:inputType="textEmailAddress"
-                android:text="admin@gmail.com" />
+                android:inputType="textEmailAddress" />
         </LinearLayout>
 
         <LinearLayout
@@ -131,20 +131,20 @@
                 android:textStyle="bold" />
 
             <EditText
+                android:id="@+id/phone"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:ems="10"
-                android:inputType="phone"
-                android:text="1234567890" />
+                android:inputType="phone" />
         </LinearLayout>
 
 
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button2"
+        android:id="@+id/saveInfoButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -158,6 +158,15 @@
         android:textAllCaps="false"
         android:textSize="20sp" />
 
+    <Button
+        android:id="@+id/editButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="85dp"
+        android:backgroundTint="@color/brownish_cream"
+        android:text="Edit "
+        android:textColor="#040303" />
 
 
 </FrameLayout>

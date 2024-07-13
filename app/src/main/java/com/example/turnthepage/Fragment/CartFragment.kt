@@ -105,7 +105,7 @@ class CartFragment : Fragment() {
 
     }
 }*/
-package com.example.turnthepage.Fragment
+/*package com.example.turnthepage.Fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -156,10 +156,55 @@ class CartFragment : Fragment() {
         retrieveCartItems()
 
         binding.proceedButton.setOnClickListener {
-            val intent = Intent(requireContext(), PayOutActivity::class.java)
+            getOrderItemsDetails()
+
+        }
+    }
+
+    private fun getOrderItemsDetails() {
+        val orderIdReference:DatabaseReference=database.reference.child("user").child(userId).child("CartItems")
+        val bookTitle= mutableListOf<String>()
+        val bookPrice= mutableListOf<String>()
+        val bookImage= mutableListOf<String>()
+        val bookDescription= mutableListOf<String>()
+        val bookQuantities= cartAdapter.getUpdatedItemQuantities()
+
+        orderIdReference.addListenerForSingleValueEvent(object:ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(bookSnapshot in snapshot.children){
+                    val orderItems=bookSnapshot.getValue(cartItems::class.java)
+                    orderItems?.bookTitle?.let{bookTitle.add(it)}
+                    orderItems?.bookPrice?.let{bookPrice.add(it)}
+                    orderItems?.bookDescription?.let{bookDescription.add(it)}
+                    orderItems?.bookImage?.let{bookImage.add(it)}
+                }
+                orderNow(bookTitle,bookPrice,bookDescription,bookImage,bookQuantities)
+            }
+
+
+
+            override fun onCancelled(error: DatabaseError) {
+               Toast.makeText(requireContext(),"order making failed",Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+    private fun orderNow(
+        bookTitle: MutableList<String>,
+        bookPrice: MutableList<String>,
+        bookDescription: MutableList<String>,
+        bookImage: MutableList<String>,
+        bookQuantities: MutableList<Int>) {
+        if(isAdded && context!=null){
+            val intent =Intent(requireContext(),PayOutActivity::class.java)
+            intent.putExtra("BookItemName",bookTitle as ArrayList<String>)
+            intent.putExtra("BookItemPrice",bookPrice as ArrayList<String>)
+            intent.putExtra("BookItemImage",bookImage as ArrayList<String>)
+            intent.putExtra("BookItemDescription",bookDescription as ArrayList<String>)
+            intent.putExtra("BookItemQuantity",bookQuantities as ArrayList<Int>)
             startActivity(intent)
         }
     }
+
 
     private fun retrieveCartItems() {
         val bookReference: DatabaseReference =
@@ -191,6 +236,144 @@ class CartFragment : Fragment() {
                         it.bookQuantity?.let { qty ->
                             quantity.add(qty)
                         }
+                    }
+                }
+                // After populating lists, set the adapter
+                setAdapter()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(context, "Failed to retrieve cart items", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun setAdapter() {
+        // Check if lists are not empty before setting adapter
+        if (bookTitles.isNotEmpty()) {
+            cartAdapter = CartAdapter(requireContext(), bookTitles, bookPrices, bookDescriptions, bookImagesUri, quantity)
+            binding.cartRecyclerBin.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            binding.cartRecyclerBin.adapter = cartAdapter
+        } else {
+            // Handle case where no items were retrieved
+            Toast.makeText(context, "No items found in cart", Toast.LENGTH_SHORT).show()
+        }
+    }
+}*/
+package com.example.turnthepage.Fragment
+
+import android.content.Intent
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.turnthepage.PayOutActivity
+import com.example.turnthepage.adapter.CartAdapter
+import com.example.turnthepage.databinding.FragmentCartBinding
+import com.example.turnthepage.model.cartItems
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+
+class CartFragment : Fragment() {
+    private lateinit var binding: FragmentCartBinding
+    private lateinit var auth: FirebaseAuth
+    private lateinit var database: FirebaseDatabase
+    private lateinit var bookTitles: MutableList<String>
+    private lateinit var bookPrices: MutableList<Int>
+    private lateinit var bookDescriptions: MutableList<String>
+    private lateinit var bookImagesUri: MutableList<String>
+    private lateinit var quantity: MutableList<Int>
+    private lateinit var cartAdapter: CartAdapter
+    private lateinit var userId: String
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentCartBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        auth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance()
+        userId = auth.currentUser?.uid ?: ""
+
+        retrieveCartItems()
+
+        binding.proceedButton.setOnClickListener {
+            getOrderItemsDetails()
+        }
+    }
+
+    private fun getOrderItemsDetails() {
+        val orderIdReference: DatabaseReference = database.reference.child("user").child(userId).child("CartItems")
+        val bookTitle = mutableListOf<String>()
+        val bookPrice = mutableListOf<Int>()
+        val bookImage = mutableListOf<String>()
+        val bookDescription = mutableListOf<String>()
+        val bookQuantities = cartAdapter.getUpdatedItemQuantities()
+
+        orderIdReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (bookSnapshot in snapshot.children) {
+                    val orderItems = bookSnapshot.getValue(cartItems::class.java)
+                    orderItems?.bookTitle?.let { bookTitle.add(it) }
+                    orderItems?.bookPrice?.let { bookPrice.add(it) }
+                    orderItems?.bookDescription?.let { bookDescription.add(it) }
+                    orderItems?.bookImage?.let { bookImage.add(it) }
+                }
+                orderNow(bookTitle, bookPrice, bookDescription, bookImage, bookQuantities)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(requireContext(), "order making failed", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun orderNow(
+        bookTitle: MutableList<String>,
+        bookPrice: MutableList<Int>,
+        bookDescription: MutableList<String>,
+        bookImage: MutableList<String>,
+        bookQuantities: MutableList<Int>
+    ) {
+        if (isAdded && context != null) {
+            val intent = Intent(requireContext(), PayOutActivity::class.java)
+            intent.putExtra("BookItemName", bookTitle as ArrayList<String>)
+            intent.putExtra("BookItemPrice", bookPrice as ArrayList<Int>)
+            intent.putExtra("BookItemImage", bookImage as ArrayList<String>)
+            intent.putExtra("BookItemDescription", bookDescription as ArrayList<String>)
+            intent.putExtra("BookItemQuantity", bookQuantities as ArrayList<Int>)
+            startActivity(intent)
+        }
+    }
+
+    private fun retrieveCartItems() {
+        val bookReference: DatabaseReference = database.reference.child("user").child(userId).child("CartItems")
+
+        bookTitles = mutableListOf()
+        bookPrices = mutableListOf()
+        bookDescriptions = mutableListOf()
+        bookImagesUri = mutableListOf()
+        quantity = mutableListOf()
+
+        bookReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (bookSnapshot in snapshot.children) {
+                    val cartItem = bookSnapshot.getValue(cartItems::class.java)
+                    cartItem?.let {
+                        it.bookTitle?.let { title -> bookTitles.add(title) }
+                        it.bookPrice?.let { price -> bookPrices.add(price) }
+                        it.bookDescription?.let { description -> bookDescriptions.add(description) }
+                        it.bookImage?.let { imageUri -> bookImagesUri.add(imageUri) }
+                        it.bookQuantity?.let { qty -> quantity.add(qty) }
                     }
                 }
                 // After populating lists, set the adapter
