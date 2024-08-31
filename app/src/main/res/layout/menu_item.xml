@@ -1,6 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.cardview.widget.CardView
+        android:layout_width="323dp"
+        android:layout_height="87dp"
+        android:layout_marginTop="25dp"
+        app:cardCornerRadius="22dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="10dp">
+
+
+            <ImageView
+                android:id="@+id/menuImage"
+                android:layout_width="48dp"
+                android:layout_height="64dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/menuaddtocartpopular"
+                android:layout_width="90dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/buttoncolor"
+                android:elevation="5dp"
+                android:fontFamily="@font/poppinsregular"
+                android:paddingTop="8dp"
+                android:text="Add to cart"
+                android:textAlignment="center"
+                android:textColor="@color/brownish_cream"
+                android:textSize="10sp"
+
+                android:textStyle="bold"
+                app:layout_constraintCircleRadius="40dp"
+                app:layout_constraintEnd_toEndOf="@+id/menuPrice"
+                app:layout_constraintStart_toStartOf="@+id/menuPrice"
+                app:layout_constraintTop_toBottomOf="@+id/menuPrice" />
+
+            <TextView
+                android:id="@+id/menuPrice"
+                android:layout_width="45dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="70dp"
+                android:layout_marginTop="13dp"
+                android:fontFamily="@font/bebasregular"
+                android:text="₹200"
+                android:textAlignment="center"
+                android:textColor="@color/start_screen_color2"
+                android:textSize="22sp"
+                app:layout_constraintStart_toEndOf="@+id/menuBookTitle"
+
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/menuBookTitle"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/poppinsregular"
+                android:text="Book Title"
+                android:textAlignment="center"
+                android:textColor="@color/start_screen_color2"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@+id/menuImage"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

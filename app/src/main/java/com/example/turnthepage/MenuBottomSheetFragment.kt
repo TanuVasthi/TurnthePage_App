@@ -1,59 +1,236 @@
-package com.example.turnthepage
+/*package com.example.turnthepage
 
 import android.os.Bundle
+import android.renderscript.ScriptGroup.Binding
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.turnthepage.adapter.CartAdapter
+import com.example.turnthepage.adapter.MenuAdapter
+import com.example.turnthepage.databinding.FragmentCartBinding
+import com.example.turnthepage.databinding.FragmentMenuBottomSheetBinding
+import com.example.turnthepage.model.menuItem
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [MenuBottomSheetFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class MenuBottomSheetFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
+class MenuBottomSheetFragment : BottomSheetDialogFragment() {
+    private lateinit var binding:FragmentMenuBottomSheetBinding
+    private lateinit var database: FirebaseDatabase
+    private lateinit var menuItems: MutableList<MenuItem>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_menu_bottom_sheet, container, false)
+        binding = FragmentMenuBottomSheetBinding.inflate(inflater, container,false)
+
+        binding.buttonBack.setOnClickListener(){
+            dismiss()
+        }
+        retriveMenuItems()
+
+        return binding.root
+    }
+
+    private fun retriveMenuItems() {
+        database = FirebaseDatabase.getInstance()
+        val bookRef:DatabaseReference=database.reference.child("menu")
+        menuItems= mutableListOf()
+        bookRef.addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(bookSnapshot in snapshot.children){
+                    val menuItem = bookSnapshot.getValue(MenuItem::class.java)
+                    menuItem?.let { menuItems.add(it) }
+                }
+                setAdapter()
+            }
+
+            private fun setAdapter() {
+                val adapter = MenuAdapter(menuItems, requireContext())
+                binding.menuRecyclerView.layoutManager=LinearLayoutManager(requireContext())
+                binding.menuRecyclerView.adapter= adapter
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MenuBottomSheetFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MenuBottomSheetFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+
+    }
+}*/
+/*package com.example.turnthepage
+
+import android.os.Bundle
+import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.turnthepage.adapter.MenuAdapter
+import com.example.turnthepage.databinding.FragmentMenuBottomSheetBinding
+import com.example.turnthepage.model.menuItem
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.database.*
+
+class MenuBottomSheetFragment : BottomSheetDialogFragment() {
+    private lateinit var binding: FragmentMenuBottomSheetBinding
+    private lateinit var database: FirebaseDatabase
+    private lateinit var menuItems: MutableList<menuItem>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentMenuBottomSheetBinding.inflate(inflater, container, false)
+
+        binding.buttonBack.setOnClickListener {
+            dismiss()
+        }
+        retrieveMenuItems()
+
+        return binding.root
+    }
+
+    private fun retrieveMenuItems() {
+        database = FirebaseDatabase.getInstance()
+        val bookRef: DatabaseReference = database.reference.child("menu")
+        menuItems = mutableListOf()
+        bookRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (bookSnapshot in snapshot.children) {
+                    val menuItem = bookSnapshot.getValue(menuItem::class.java)
+                    menuItem?.let { menuItems.add(it) }
                 }
+                Log.d("ITEMS","onDataChange:Data Recieved")
+                setAdapter()
             }
+
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle possible errors.
+            }
+        })
+    }
+    private fun setAdapter() {
+        context?.let { ctx ->
+            if(menuItems.isNotEmpty()){
+                val adapter = MenuAdapter(menuItems, ctx)
+                binding.menuRecyclerView.layoutManager = LinearLayoutManager(ctx)
+                binding.menuRecyclerView.adapter = adapter
+                Log.d("ITEMS","setAdapter:data set")
+            }
+            else{
+                Log.d("ITEMS","setAdapter:data not set")
+            }
+        }
+    }
+
+
+    companion object {
+        // Add any necessary companion object functions or variables here.
+    }
+}
+*/
+package com.example.turnthepage
+
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.turnthepage.adapter.MenuAdapter
+import com.example.turnthepage.databinding.FragmentMenuBottomSheetBinding
+import com.example.turnthepage.model.menuItem
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.firebase.database.*
+
+class MenuBottomSheetFragment : BottomSheetDialogFragment() {
+    private lateinit var binding: FragmentMenuBottomSheetBinding
+    private lateinit var database: FirebaseDatabase
+    private lateinit var menuItems: MutableList<menuItem>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentMenuBottomSheetBinding.inflate(inflater, container, false)
+
+        binding.buttonBack.setOnClickListener {
+            dismiss()
+        }
+        retrieveMenuItems()
+
+        return binding.root
+    }
+
+    private fun retrieveMenuItems() {
+        database = FirebaseDatabase.getInstance()
+        val bookRef: DatabaseReference = database.reference.child("menu")
+        menuItems = mutableListOf()
+        bookRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                menuItems.clear()
+                Log.d("Firebase", "Snapshot children count: ${snapshot.childrenCount}")
+                for (bookSnapshot in snapshot.children) {
+                    Log.d("Firebase", "Child key: ${bookSnapshot.key}, value: ${bookSnapshot.value}")
+                    try {
+                        val menuItem = bookSnapshot.getValue(menuItem::class.java)
+                        menuItem?.let { menuItems.add(it) }
+                    } catch (e: Exception) {
+                        Log.e("Firebase", "Error converting snapshot to menuItem: ${e.message}")
+                    }
+                }
+                setAdapter()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle database read errors here
+                Log.e("Firebase", "Error retrieving menu items: ${error.message}")
+            }
+        })
+    }
+
+    private fun setAdapter() {
+        context?.let { ctx ->
+            if (menuItems.isNotEmpty()) {
+                val adapter = MenuAdapter(menuItems, ctx)
+                binding.menuRecyclerView.layoutManager = LinearLayoutManager(ctx)
+                binding.menuRecyclerView.adapter = adapter
+                Log.d("Firebase", "Adapter set with ${menuItems.size} items")
+            } else {
+                Log.d("Firebase", "No menu items available")
+            }
+        }
+    }
+
+    companion object {
+        // Add any necessary companion object functions or variables here.
     }
 }

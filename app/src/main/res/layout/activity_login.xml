@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
@@ -33,7 +33,7 @@
         app:layout_constraintTop_toTopOf="@+id/imageView3" />
 
     <EditText
-        android:id="@+id/editTextTextEmailAddress"
+        android:id="@+id/EmailAddressLogin"
         android:layout_width="330dp"
         android:layout_height="74dp"
         android:drawableLeft="@drawable/emailiconimg"
@@ -56,7 +56,7 @@
         app:layout_constraintVertical_bias="0.691" />
 
     <EditText
-        android:id="@+id/editTextTextPassword"
+        android:id="@+id/LoginPassword"
         android:layout_width="330dp"
         android:layout_height="74dp"
         android:layout_marginTop="10dp"
@@ -70,9 +70,9 @@
         android:textColorHint="@color/brownish_cream"
         android:textColorLink="@color/brownish_cream"
         android:textSize="22sp"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddress"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress" />
+        app:layout_constraintEnd_toEndOf="@+id/EmailAddressLogin"
+        app:layout_constraintStart_toStartOf="@+id/EmailAddressLogin"
+        app:layout_constraintTop_toBottomOf="@+id/EmailAddressLogin" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/loginbutton"
@@ -87,9 +87,9 @@
         android:textColorLink="@color/muted_brown"
         android:textSize="24sp"
         app:cornerRadius="10sp"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextPassword"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPassword"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword"
+        app:layout_constraintEnd_toEndOf="@+id/LoginPassword"
+        app:layout_constraintStart_toStartOf="@+id/LoginPassword"
+        app:layout_constraintTop_toBottomOf="@+id/LoginPassword"
         app:strokeColor="@color/muted_brown" />
 
     <TextView

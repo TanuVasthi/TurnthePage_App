@@ -1,5 +1,6 @@
 package com.example.turnthepage.Fragment
 
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,21 +8,25 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.denzcoskun.imageslider.constants.ScaleTypes
 import com.denzcoskun.imageslider.interfaces.ItemClickListener
 import com.denzcoskun.imageslider.models.SlideModel
-
+import com.example.turnthepage.MenuBottomSheetFragment
 import com.example.turnthepage.R
-
-
+import com.example.turnthepage.adapter.MenuAdapter
+import com.example.turnthepage.model.menuItem
 import com.example.turnthepage.databinding.FragmentHomeBinding
-import com.example.turnthepage.databinding.PopularItemBinding
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
-
+    private lateinit var database:FirebaseDatabase
+    private lateinit var menuItems: MutableList<menuItem>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -31,8 +36,14 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+
         binding = FragmentHomeBinding.inflate(inflater,container,false)
+        binding.viewAllMenu.setOnClickListener{
+            val bottomSheetDialog = MenuBottomSheetFragment()
+            bottomSheetDialog.show(parentFragmentManager,"Test")
+        }
+        //retrieve and display popular menu items
+        retrieveAndDisplayPopularItems()
         return binding.root
 
 
@@ -40,12 +51,53 @@ class HomeFragment : Fragment() {
 
     }
 
+    private fun retrieveAndDisplayPopularItems() {
+        //get reference to database
+        database=FirebaseDatabase.getInstance()
+        val bookRef:DatabaseReference=database.reference.child("menu")
+        menuItems= mutableListOf()
+
+        bookRef.addListenerForSingleValueEvent(object:ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for(bookSnapshot in snapshot.children){
+                    val menuItem=bookSnapshot.getValue(menuItem::class.java)
+                    menuItem?.let{
+                        menuItems.add(it)
+                    }
+                }
+                //display random popular books
+                randomPopularItems()
+            }
+
+            private fun randomPopularItems() {
+                val index=menuItems.indices.toList().shuffled()
+                val numItemToShow=6
+                val subsetMenuItems=index.take(numItemToShow).map { menuItems[it] }
+
+                setPopularItemsAdapter(subsetMenuItems)
+            }
+
+            private fun setPopularItemsAdapter(subsetMenuItems: List<menuItem>) {
+                val adapter= MenuAdapter(subsetMenuItems.toMutableList(),requireContext())
+                binding.popularRecyclerView.layoutManager= LinearLayoutManager(requireContext())
+                binding.popularRecyclerView.adapter=adapter
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val imageList = ArrayList<SlideModel>()
-        imageList.add(SlideModel(R.drawable.start, ScaleTypes.FIT))
-        imageList.add(SlideModel(R.drawable.loginpageimage, ScaleTypes.FIT))
-        imageList.add(SlideModel(R.drawable.locationimagegradient, ScaleTypes.FIT))
+        imageList.add(SlideModel(R.drawable.bookstore6, ScaleTypes.FIT))
+        imageList.add(SlideModel(R.drawable.bookstore2, ScaleTypes.FIT))
+        imageList.add(SlideModel(R.drawable.bookstore3, ScaleTypes.FIT))
+        imageList.add(SlideModel(R.drawable.bookstore5, ScaleTypes.FIT))
         val imageSlider = binding.imageSlider
         imageSlider.setImageList(imageList)
         imageSlider.setImageList(imageList, ScaleTypes.FIT)
@@ -60,12 +112,8 @@ class HomeFragment : Fragment() {
 
             }
         })
-        val item = listOf("The Great Gatsby","To Kill a Mocking Bird","Pride and Prejudice","Moby Dick")
-        val Price=listOf("₹300","₹350","₹230","₹250")
-        val popularFoodImages=listOf(R.drawable.greatgatsby,R.drawable.tokillamockingbird,R.drawable.prideandprejudice,R.drawable.mobydick)
-        val adapter=PopularAdapter(item,Price,popularFoodImages)
-        binding.popularRecyclerView.layoutManager= LinearLayoutManager(requireContext())
-        binding.popularRecyclerView.adapter=adapter
+
+
     }
 
     companion object {
@@ -73,33 +121,5 @@ class HomeFragment : Fragment() {
     }
 }
 
-class PopularAdapter (private val items:List<String>,private val price:List<String>,private val image:List<Int>) : RecyclerView.Adapter<PopularAdapter.PopularViewHolder>(){
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PopularViewHolder {
-        return PopularViewHolder(PopularItemBinding.inflate(LayoutInflater.from(parent.context),parent,false))
-    }
-
-
-    override fun onBindViewHolder(holder: PopularViewHolder, position: Int) {
-        val item = items[position]
-        val images = image[position]
-        val price=price[position]
-        holder.bind(item,price,images)
-    }
-    override fun getItemCount(): Int {
-        return items.size
-    }
-
-    class PopularViewHolder(private val binding: PopularItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        private val imagesView=binding.imageView5
-        fun bind(item:String,price:String,images:Int){
-            binding.BookTitlePopular.text=item
-            binding.pricePopular.text=price
-            imagesView.setImageResource(images)
-
-        }
-
-    }
-
-}

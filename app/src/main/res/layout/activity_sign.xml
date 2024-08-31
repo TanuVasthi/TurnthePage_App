@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SignActivity">
@@ -36,7 +36,7 @@
         app:layout_constraintVertical_bias="0.325" />
 
     <EditText
-        android:id="@+id/editTextTextEmailAddress"
+        android:id="@+id/editTextTextEmailAddressSign"
         android:layout_width="330dp"
         android:layout_height="74dp"
         android:drawableLeft="@drawable/emailiconimg"
@@ -59,7 +59,7 @@
         app:layout_constraintVertical_bias="0.691" />
 
 <EditText
-android:id="@+id/editTextTextPassword"
+android:id="@+id/editTextTextPasswordSign"
 android:layout_width="330dp"
 android:layout_height="74dp"
 android:layout_marginTop="10dp"
@@ -73,9 +73,9 @@ android:textColor="@color/brownish_cream"
 android:textColorHint="@color/brownish_cream"
 android:textColorLink="@color/brownish_cream"
 android:textSize="22sp"
-app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddress"
-app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress"
-app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress" />
+app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddressSign"
+app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddressSign"
+app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddressSign" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/createaccountbutton"
@@ -90,13 +90,13 @@ app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress" />
         android:textColorLink="@color/muted_brown"
         android:textSize="24sp"
         app:cornerRadius="10sp"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextPassword"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPassword"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTextPasswordSign"
+        app:layout_constraintStart_toStartOf="@+id/editTextTextPasswordSign"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPasswordSign"
         app:strokeColor="@color/muted_brown" />
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/NameSignIn"
         android:layout_width="330dp"
         android:layout_height="74dp"
         android:layout_marginBottom="10dp"
@@ -112,10 +112,10 @@ app:layout_constraintTop_toBottomOf="@+id/editTextTextEmailAddress" />
         android:textColorHint="@color/brownish_cream"
         android:textColorLink="@color/brownish_cream"
         android:textSize="22sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextTextEmailAddress"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddress"
+        app:layout_constraintBottom_toTopOf="@+id/editTextTextEmailAddressSign"
+        app:layout_constraintEnd_toEndOf="@+id/editTextTextEmailAddressSign"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddress" />
+        app:layout_constraintStart_toStartOf="@+id/editTextTextEmailAddressSign" />
 
     <TextView
         android:id="@+id/alreadyhavebutton"

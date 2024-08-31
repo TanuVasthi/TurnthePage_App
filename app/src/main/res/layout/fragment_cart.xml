@@ -1,14 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cartRecycleBin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment.CartFragment">
+    android:visibility="visible"
+    app:layoutDescription="@xml/fragment_cart_scene"
+    tools:context=".Fragment.CartFragment"
+    tools:visibility="visible">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Cart" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cartRecyclerBin"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="140dp"
+        app:layout_constraintBottom_toTopOf="@+id/proceedButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/proceedButton"
+        android:layout_width="325dp"
+        android:layout_height="57dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/proceedbuttonshape"
+        android:fontFamily="@font/poppinsregular"
+        android:text="Proceed"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
